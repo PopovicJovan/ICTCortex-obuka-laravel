@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
+use App\Http\Traits\CanLoadRelationships;
 use App\Models\Event;
 
 use Illuminate\Http\Request;
@@ -11,30 +12,15 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+    use CanLoadRelationships;
+    private array $relations = ['user', 'attendees', 'attendees.user'];
+
     public function index()
     {
-        $query = Event::query();
-        $relations = ['user', 'attendees', 'attendees.user'];
-        foreach ($relations as $relation){
-            $query->when(
-                $this->shouldIncludeRelation($relation) , fn($q) => $q->with($relation)
-            );
-        }
-        return EventResource::collection($query->paginate());
-
+        $query = $this->loadRelationships(Event::query());
+        return EventResource::collection($query->latest()->paginate());
     }
 
-    protected function shouldIncludeRelation(string $relation): Bool
-    {
-        $include = request()->query('include');
-
-        if(is_null($include)) return false;
-
-
-        $relations = array_map('trim', explode(',', $include));
-
-        return in_array($relation, $relations);
-    }
 
     public function store(Request $request)
     {
@@ -47,13 +33,13 @@ class EventController extends Controller
 
         $event = Event::create([...$data,'user_id' => 1]);
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
+
     }
 
     public function show(Event $event)
     {
-        $event->load('user', 'attendee');
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     public function update(Request $request, Event $event)
@@ -67,7 +53,7 @@ class EventController extends Controller
 
         $event->update([...$data]);
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
 
     public function destroy(Event $event)
