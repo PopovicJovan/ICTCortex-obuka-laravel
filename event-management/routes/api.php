@@ -17,6 +17,6 @@ Route::get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 Route::delete('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::apiResource('events', EventController::class)->middleware('auth');
+Route::apiResource('events', EventController::class);
 Route::apiResource('events.attendees', AttendeeController::class)
-    ->scoped(['attendees' => 'event'])->except(['update'])->middleware('auth');
+    ->scoped(['attendees' => 'event'])->except(['update']);
