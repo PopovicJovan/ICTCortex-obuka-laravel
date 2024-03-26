@@ -10,6 +10,7 @@ class   CreatePoll extends Component
     public $title;
     public $options = ['First', 'Second', 'Thirt'];
 
+
     protected $rules = [
         'title' => 'required|min:3|max:255',
         'options' => 'required|min:1|max:10',
@@ -54,10 +55,12 @@ class   CreatePoll extends Component
 //            ]);
 //        }
         $this->reset(['title', 'options']);
+        $this->emit('poolCreated');
     }
 
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
     }
+
 }
