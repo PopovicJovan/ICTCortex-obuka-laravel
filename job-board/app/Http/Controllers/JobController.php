@@ -29,7 +29,10 @@ class JobController extends Controller
 //        }elseif (request('min_salary') && !request('max_salary')){
 //            $jobs->where('salary', '>=', request('min_salary'));
 //        }
-        return view("job.index", ['jobs' => Job::with('employer')->filter($filters)->get()]);
+        return view("job.index",
+                    ['jobs' => Job::with('employer')
+                                ->filter($filters)->get()]
+                    );
     }
 
     /**
@@ -53,7 +56,7 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        return view('job.show', ['job' => $job->load('employer')]);
+        return view('job.show', ['job' => $job->load('employer.jobs')]);
     }
 
     /**
