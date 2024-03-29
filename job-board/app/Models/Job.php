@@ -25,7 +25,10 @@ class Job extends Model
         return $query->when($filters['search'] ?? null, function ($query) use ($filters){
             $query->where(function ($query) use ($filters){
                 $query->where('title', 'like', '%'. $filters['search'] .'%')
-                    ->orWhere('description', 'like', '%'. $filters['search'] .'%');
+                    ->orWhere('description', 'like', '%'. $filters['search'] .'%')
+                    ->orWhereHas('employer',function ($query) use ($filters){
+                        $query->where('company_name','like', '%'. $filters['search'] .'%');
+                    });
             });
         })->when($filters['min_salary'] ?? null, function ($query) use ($filters){
             $query->where('salary', '>=', $filters['min_salary']);
