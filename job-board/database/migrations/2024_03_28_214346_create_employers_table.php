@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('employers', function (Blueprint $table) {
             $table->id();
+            $table->string('company_name');
+            $table->foreignIdFor(\App\Models\User::class)
+                ->nullable()->constrained();
             $table->timestamps();
+        });
+
+        Schema::table('jobs', function (Blueprint $table){
+            $table->foreignIdFor(\App\Models\Employer::class)->constrained();
         });
     }
 
@@ -22,6 +29,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('jobs', function (Blueprint $table){
+            $table->dropForeignIdFor(\App\Models\Employer::class);
+        });
         Schema::dropIfExists('employers');
     }
 };
