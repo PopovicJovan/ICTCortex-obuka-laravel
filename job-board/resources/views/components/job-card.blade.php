@@ -1,4 +1,4 @@
-<x-layout>
+
     <x-card class="mb-4">
         <div class="flex justify-between mb-4">
             <h2 class="text-lg font-medium">{{$job->title}}</h2>
@@ -27,4 +27,3 @@
         </div>
         {{$slot}}
     </x-card>
-</x-layout>
