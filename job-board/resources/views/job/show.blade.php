@@ -3,10 +3,29 @@
             <p class="text-sm text-slate-500">
                 {!! nl2br(e($job->description)) !!}
             </p>
-            <div class="mt-4">
-                <x-link-button :href="route('jobs.index')">
-                    Back
-                </x-link-button>
+            <div class="flex space-x-2.5">
+                <div class="mt-4">
+                    <x-link-button :href="route('jobs.index')">
+                        Back
+                    </x-link-button>
+                </div>
+                <div class="mt-4">
+                    @can('apply', $job)
+                    <x-link-button :href="route('job.application.create', ['job' => $job])">
+                        Apply!
+                    </x-link-button>
+                    @else
+                        @if(auth()->user())
+                        <x-link-button href="#">
+                            You have already applied!
+                        </x-link-button>
+                        @else
+                            <x-link-button :href="route('auth.create')">
+                                Sign in to apply!
+                            </x-link-button>
+                        @endif
+                    @endcan
+                </div>
             </div>
         </x-job-card>
         <x-card class="mb-4">

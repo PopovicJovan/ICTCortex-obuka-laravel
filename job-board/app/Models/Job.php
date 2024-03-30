@@ -46,4 +46,12 @@ class Job extends Model
             $query->where('category', $filters['category']);
         });
     }
+
+    public function hasUserApplied(User $user): bool
+    {
+        return $this->where('id', $this->id)
+            ->whereHas('jobApplications',
+                        fn($query)=> $query->where('user_id', $user->id)
+            )->exists();
+    }
 }
