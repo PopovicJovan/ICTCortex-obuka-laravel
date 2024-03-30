@@ -27,7 +27,7 @@
                  ])>
             {{ old($name, $value) }}
         </textarea>
-        
+
     @endif
 
         @error($name)
