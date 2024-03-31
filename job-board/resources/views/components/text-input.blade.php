@@ -1,5 +1,5 @@
 <div class="relative">
-    @if($type != 'textare')
+    @if($type != 'textarea')
         @if($formRef)
             <button type="button" class="absolute top-0 right-1 flex h-full items-center"
                     @click="$refs['input-{{$name}}'].value = ''; $refs['{{$formRef}}'].submit()">

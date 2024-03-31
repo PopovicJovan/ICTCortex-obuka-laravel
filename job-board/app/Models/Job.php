@@ -13,8 +13,10 @@ class Job extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['title', 'salary', 'experience', 'location', 'description', 'category'];
     public static array $experience = ['Entry', 'Intermediate', 'Senior'];
     public static array $category = ['IT', 'Marketing', 'Finance', 'Sales'];
+
 
     public function employer(): BelongsTo
     {

@@ -12,7 +12,10 @@ class JobPolicy
     {
         return true;
     }
-
+    public function viewAnyEmployer(User $user): bool
+    {
+        return true;
+    }
     public function view(?User $user, Job $job): bool
     {
         return true;
@@ -20,27 +23,32 @@ class JobPolicy
 
     public function create(User $user): bool
     {
-        return false;
+        return $user->employer !== null;
     }
 
-    public function update(User $user, Job $job): bool
+    public function update(User $user, Job $job): bool|Response
     {
-        return false;
+        if ($user->id !== $job->employer->user_id) return false;
+
+        if($job->jobApplications()->count() > 0) return Response::deny('You cannot change it!');
+
+        return true;
+
     }
 
     public function delete(User $user, Job $job): bool
     {
-        return false;
+        return $user->id === $job->employer->user_id;
     }
 
     public function restore(User $user, Job $job): bool
     {
-        return false;
+        return $user->id === $job->employer->user_id;
     }
 
     public function forceDelete(User $user, Job $job): bool
     {
-        return false;
+        return $user->id === $job->employer->user_id;
     }
 
     public function apply(User $user, Job $job): bool
